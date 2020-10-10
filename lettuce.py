@@ -1,9 +1,11 @@
 from nltk.corpus import wordnet as wn
 import json
+import copy
 from AvsAn.AvsAn import AvsAn
 
-printYeets = False
+printYeets = True
 words = {}
+results = {}
 
 # Rules
 positions = {"first": {2: "U"}, "last": {4: "B"}}
@@ -24,7 +26,7 @@ def yeet(word, wordPos, reason):
     if printYeets:
         print("no", word, "-", reason)
 
-    del words[wordPos][words[wordPos].index(word)]
+    results[wordPos].remove(word)
     yoteCount[reason] += 1
 
 
@@ -32,19 +34,25 @@ with open("words.json") as file:
 
     words = json.load(file)
 
+    results = copy.deepcopy(words)
+
 for word in words["first"]:
+
+    carryOn = True
 
     for pos in positions["first"]:
         if word[pos-1] != positions["first"][pos]:
             yeet(word, "first", "position")
-            continue
+            carryOn = False
+            break
 
-    if verbRule:
+    if verbRule and carryOn:
         toYeet = True
         for tmp in wn.synsets(word):
-            if tmp.name().split('.')[0] == word:
+            if tmp.name().split('.')[0] == word.lower() or len(tmp.name().split('.')[0]) != len(word) and tmp.name().split('.')[0]+"s" == word.lower():
                 if tmp.pos() == "v":
                     toYeet = False
+                    break
 
         if toYeet:
             yeet(word, "first", "verbRule")
@@ -67,13 +75,13 @@ for word in words["last"]:
 
 with open("first.txt", "w") as first:
 
-    for word in words["first"]:
+    for word in results["first"]:
         first.writelines(word + "\n")
 
 
 with open("last.txt", "w") as last:
 
-    for word in words["last"]:
+    for word in results["last"]:
         last.writelines(word + "\n")
 
 print("Yote:")
