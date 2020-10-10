@@ -8,7 +8,7 @@ words = {}
 results = {}
 
 # Rules
-positions = {"first": {2: "U"}, "last": {4: "B"}}
+positions = {"first": {2: "U"}, "last": {1: "P", 4: "B"}}
 vowelRule = True
 pluralRule = True
 verbRule = True
