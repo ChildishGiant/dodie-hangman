@@ -49,10 +49,9 @@ for word in words["first"]:
     if verbRule and carryOn:
         toYeet = True
         for tmp in wn.synsets(word):
-            if tmp.name().split('.')[0] == word.lower() or len(tmp.name().split('.')[0]) != len(word) and tmp.name().split('.')[0]+"s" == word.lower():
-                if tmp.pos() == "v":
-                    toYeet = False
-                    break
+            if tmp.pos()[0] == "v":
+                toYeet = False
+                break
 
         if toYeet:
             yeet(word, "first", "verbRule")
