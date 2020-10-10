@@ -1,5 +1,6 @@
 from nltk.corpus import wordnet as wn
 import json
+from AvsAn.AvsAn import AvsAn
 
 printYeets = False
 words = {}
@@ -51,7 +52,7 @@ for word in words["first"]:
 
 for word in words["last"]:
 
-    if vowelRule and word[0] in ["A", "E", "I", "O", "U"]:
+    if vowelRule and AvsAn.getInstance().query(word)["article"] == "an":
         yeet(word, "last", "vowelRule")
         continue
 
