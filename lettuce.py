@@ -8,16 +8,18 @@ words = {}
 results = {}
 
 # Rules
-positions = {"first": {2: "U"}, "last": {1: "P", 4: "B"}}
+positions = {"first": {2: "U", 5: "D"}, "last": {1: "P", 4: "B"}}
 vowelRule = True
 pluralRule = True
 verbRule = True
+nounRule = True
 
 yoteCount = {
     "vowelRule": 0,
     "pluralRule": 0,
     "verbRule": 0,
-    "position": 0
+    "position": 0,
+    "nounRule": 0
 }
 
 
@@ -59,6 +61,8 @@ for word in words["first"]:
 
 for word in words["last"]:
 
+    carryOn = True
+
     if vowelRule and AvsAn.getInstance().query(word)["article"] == "an":
         yeet(word, "last", "vowelRule")
         continue
@@ -70,6 +74,18 @@ for word in words["last"]:
     for pos in positions["last"]:
         if word[pos-1] != positions["last"][pos]:
             yeet(word, "last", "position")
+            carryOn = False
+            break
+
+    if nounRule and carryOn:
+        toYeet = True
+        for tmp in wn.synsets(word):
+            if tmp.pos()[0] == "n":
+                toYeet = False
+                break
+
+        if toYeet:
+            yeet(word, "last", "nounRule")
 
 
 with open("first.txt", "w") as first:
